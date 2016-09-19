@@ -29,14 +29,14 @@ RUN sed -i.bak "s@;cgi.fix_pathinfo=1@cgi.fix_pathinfo=0@g" /etc/php5/fpm/php.in
 RUN sed -i".bak" "s/^\;date\.timezone.*$/date\.timezone = \"Europe\/Paris\" /g" /etc/php5/fpm/php.ini
 
 # Add config files
-ADD init /init
+ADD conf_base /conf_base
 
 # run init script
 RUN mkdir /var/www
 RUN chown -R www-data:www-data /var/www
 VOLUME ["/var/www"]
 VOLUME ["/etc/nginx/sites-available"]
-RUN cp /init/sample-virtual-host /etc/nginx/sites-available/sample
+RUN cp /conf_base/sample-virtual-host /etc/nginx/sites-available/sample
 RUN ln -s /etc/nginx/sites-available/*.conf /etc/nginx/sites-enabled/
 
 # expose port 80
