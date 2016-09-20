@@ -38,6 +38,7 @@ RUN chown -R www-data:www-data /var/www
 VOLUME ["/var/www"]
 VOLUME ["/etc/nginx/sites-available"]
 RUN cp /conf_base/info.conf /etc/nginx/sites-available/info.conf
+RUN chmod +x /conf_base/config.sh
 RUN /conf_base/config.sh
 
 # expose port 80
