@@ -32,12 +32,13 @@ RUN sed -i".bak" "s/^\;date\.timezone.*$/date\.timezone = \"Europe\/Paris\" /g" 
 ADD conf_base /conf_base
 
 # run init script
+RUN echo Lets create the root directory
 RUN mkdir /var/www
 RUN chown -R www-data:www-data /var/www
 VOLUME ["/var/www"]
 VOLUME ["/etc/nginx/sites-available"]
-RUN cp /conf_base/sample-virtual-host /etc/nginx/sites-available/sample
-RUN ln -s /etc/nginx/sites-available/*.conf /etc/nginx/sites-enabled/
+RUN cp /conf_base/info.conf /etc/nginx/sites-available/info.conf
+RUN /conf_base/config.sh
 
 # expose port 80
 EXPOSE 80
