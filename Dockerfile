@@ -4,9 +4,6 @@ FROM ubuntu:14.04
 # specify maintainer
 MAINTAINER Alexandre Lalung <lalung.alexandre@gmail.com>
 
-ENV DATE_TIMEZONE Europe/Paris
-ENV MAX_EXECUTIION_TIME 300
-
 # run update and install nginx, php-fpm and other useful libraries
 RUN apt-get update -y && \
 	apt-get install -y \
@@ -20,7 +17,8 @@ RUN apt-get update -y && \
 	php5-mcrypt \
 	php5-apcu \
 	php5-gd \
-	php5-curl
+	php5-curl \
+	php5-mysql
 
 # install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -30,6 +28,7 @@ RUN sed -i.bak "s@;cgi.fix_pathinfo=1@cgi.fix_pathinfo=0@g" /etc/php5/fpm/php.in
 
 # set max_execution_time
 RUN sed -i".bak" "s/^max_execution_time.*$/max_execution_time = 300 /g" /etc/php5/fpm/php.ini
+RUN echo "request_terminate_timeout=300s" >> /etc/php5/fpm/php-fpm.conf
 
 # set timezone in php.ini
 RUN sed -i".bak" "s/^\;date\.timezone.*$/date\.timezone = \"Europe\/Paris\" /g" /etc/php5/fpm/php.ini
