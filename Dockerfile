@@ -27,8 +27,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN sed -i.bak "s@;cgi.fix_pathinfo=1@cgi.fix_pathinfo=0@g" /etc/php5/fpm/php.ini
 
 # set max_execution_time
-RUN sed -i".bak" "s/^max_execution_time.*$/max_execution_time = 300 /g" /etc/php5/fpm/php.ini
-RUN echo "request_terminate_timeout=300s" >> /etc/php5/fpm/php-fpm.conf
+RUN sed -i".bak" "s/^max_execution_time.*$/max_execution_time = 3000 /g" /etc/php5/fpm/php.ini
+RUN echo "request_terminate_timeout=3000s" >> /etc/php5/fpm/php-fpm.conf
 
 # set timezone in php.ini
 RUN sed -i".bak" "s/^\;date\.timezone.*$/date\.timezone = \"Europe\/Paris\" /g" /etc/php5/fpm/php.ini
