@@ -5,6 +5,8 @@ FROM ubuntu:14.04
 MAINTAINER Alexandre Lalung <lalung.alexandre@gmail.com>
 
 # run update and install nginx, php-fpm and other useful libraries
+RUN curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
+
 RUN apt-get update -y && \
 	apt-get install -y \
 	nginx \
@@ -18,7 +20,12 @@ RUN apt-get update -y && \
 	php5-apcu \
 	php5-gd \
 	php5-curl \
-	php5-mysql
+	php5-mysql \
+	nodejs
+
+RUN npm install -g \
+	npm@latest \
+	mjml
 
 # install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
