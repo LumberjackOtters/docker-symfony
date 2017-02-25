@@ -23,9 +23,9 @@ RUN apt-get update -y && \
 	php5-mysql \
 	nodejs
 
-RUN npm install -g \
+RUN sudo npm install \
 	npm@latest \
-	mjml
+	mjml -g
 
 # install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
