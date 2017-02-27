@@ -14,7 +14,7 @@ RUN apt-get update -y && \
 	git \
 	wget \
 	python \
-	make \
+	build-essential \
 	php5-fpm \
 	php5-cli \
 	php5-intl \
