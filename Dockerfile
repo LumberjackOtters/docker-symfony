@@ -20,8 +20,11 @@ RUN apt-get update -y && \
 	php5-gd \
 	php5-curl \
 	php5-mysql \
-	nodejs \
-	npm
+
+RUN curl -sL https://deb.nodesource.com/setup | sudo bash -
+
+RUN apt-get install -y \
+	nodejs
 
 RUN sudo ln -s /usr/bin/nodejs /usr/bin/node
 
