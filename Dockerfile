@@ -19,7 +19,7 @@ RUN apt-get update -y && \
 	php5-apcu \
 	php5-gd \
 	php5-curl \
-	php5-mysql \
+	php5-mysql
 
 ENV NPM_CONFIG_LOGLEVEL info
 ENV NODE_VERSION 7.6.0
