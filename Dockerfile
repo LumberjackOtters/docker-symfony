@@ -12,6 +12,7 @@ RUN apt-get update -y && \
 	curl \
 	nano \
 	git \
+	build-essentials \
 	php5-fpm \
 	php5-cli \
 	php5-intl \
@@ -20,6 +21,9 @@ RUN apt-get update -y && \
 	php5-gd \
 	php5-curl \
 	php5-mysql
+
+RUN groupadd --gid 1000 node \
+  && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
 # gpg keys listed at https://github.com/nodejs/node
 RUN set -ex \
