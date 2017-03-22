@@ -40,9 +40,9 @@ RUN sed -i.bak "s@;cgi.fix_pathinfo=1@cgi.fix_pathinfo=0@g" /etc/php5/fpm/php.in
 RUN sed -i".bak" "s/^max_execution_time.*$/max_execution_time = 3000 /g" /etc/php5/fpm/php.ini
 RUN echo "request_terminate_timeout=3000s" >> /etc/php5/fpm/php-fpm.conf
 
-RUN sed "12iproxy_buffering off;" /etc/nginx/nginx.conf && \
-	sed "13ifastcgi_buffers 16 256k;" /etc/nginx/nginx.conf && \
-	sed "14ifastcgi_buffer_size 256k;" /etc/nginx/nginx.conf
+RUN sed -i".bak" "11iproxy_buffering off;" /etc/nginx/nginx.conf && \
+	sed -i".bak" "12ifastcgi_buffers 16 256k;" /etc/nginx/nginx.conf && \
+	sed -i".bak" "13ifastcgi_buffer_size 256k;" /etc/nginx/nginx.conf
 
 # set timezone in php.ini
 RUN sed -i".bak" "s/^\;date\.timezone.*$/date\.timezone = \"Europe\/Paris\" /g" /etc/php5/fpm/php.ini
