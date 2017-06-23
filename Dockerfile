@@ -48,11 +48,9 @@ RUN sed -i".bak" "11iproxy_buffering off;" /etc/nginx/nginx.conf && \
 RUN sed -i".bak" "s/^\;date\.timezone.*$/date\.timezone = \"Europe\/Paris\" /g" /etc/php5/fpm/php.ini
 
 # run init script
-RUN echo Lets create the root directory
 RUN mkdir /var/www
 RUN chown -R www-data:www-data /var/www
-VOLUME ["/var/www"]
-VOLUME ["/etc/nginx/sites-available"]
+
 RUN rm /etc/nginx/sites-available/default
 RUN ln -s /etc/nginx/sites-available/info.conf /etc/nginx/sites-enabled/
 RUN ln -s /etc/nginx/sites-available/site.conf /etc/nginx/sites-enabled/
