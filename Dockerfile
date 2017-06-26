@@ -1,63 +1,51 @@
-# set the base image first
-FROM ubuntu:14.04
-
-# specify maintainer
+FROM php:5.6.30-fpm
 MAINTAINER Alexandre Lalung <lalung.alexandre@gmail.com>
 
-# run update and install nginx, php-fpm and other useful libraries
+ENV NGINX_VERSION 1.12.0-1~jessie
+ENV NJS_VERSION   1.12.0.0.1.10-1~jessie
 
-RUN apt-get update -y && \
-	apt-get install -y \
-	nginx \
-	curl \
-	nano \
-	git \
-	wget \
-	python \
-	build-essential \
-	php5-fpm \
-	php5-cli \
-	php5-intl \
-	php5-mcrypt \
-	php5-apcu \
-	php5-gd \
-	php5-curl \
-	php5-mysql \
-	build-essential
+RUN set -ex \
+	&& apt-key adv --keyserver hkp://pgp.mit.edu:80 --recv-keys 573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62 \
+	&& echo "deb http://nginx.org/packages/debian/ jessie nginx" > /etc/apt/sources.list.d/nginx.list
 
-# Install Node.js
-RUN curl -sL https://deb.nodesource.com/setup_7.x | bash - &&\
-	apt-get install -y \
-	nodejs
+RUN apt-get update \
+	&& apt-get install --no-install-recommends --no-install-suggests -qy \
+	# NGINX
+		nginx=${NGINX_VERSION} \
+		nginx-module-xslt=${NGINX_VERSION} \
+		nginx-module-geoip=${NGINX_VERSION} \
+		nginx-module-image-filter=${NGINX_VERSION} \
+		nginx-module-njs=${NJS_VERSION} \
+		gettext-base \
+	# PHP extensions dependencies
+		# intl
+		libicu-dev \
+		# mcrypt
+		libmcrypt-dev \
+		# gd
+		libfreetype6-dev \
+        libjpeg62-turbo-dev \
+		libpng12-dev \
+	# supervisor
+		supervisor \
+	&& rm -rf /var/lib/apt/lists/*
 
-# install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+# forward request and error logs to docker log collector
+RUN ln -sf /dev/stdout /var/log/nginx/access.log \
+	&& ln -sf /dev/stderr /var/log/nginx/error.log
 
-# fix security issue in php.ini, more info https://nealpoole.com/blog/2011/04/setting-up-php-fastcgi-and-nginx-dont-trust-the-tutorials-check-your-configuration/
-RUN sed -i.bak "s@;cgi.fix_pathinfo=1@cgi.fix_pathinfo=0@g" /etc/php5/fpm/php.ini
+# PHP extensions
+RUN set -ex \
+	&& pecl install apcu-4.0.8 \
+	&& docker-php-ext-enable apcu \
+	&& docker-php-ext-configure gd --with-freetype-dir --with-png-dir --with-jpeg-dir \
+	&& docker-php-ext-install -j$(nproc) intl mcrypt
 
-# set max_execution_time
-RUN sed -i".bak" "s/^max_execution_time.*$/max_execution_time = 3000 /g" /etc/php5/fpm/php.ini
-RUN echo "request_terminate_timeout=3000s" >> /etc/php5/fpm/php-fpm.conf
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY php.ini /usr/local/etc/php/php.ini
+COPY custom-fpm.conf /usr/local/etc/php-fpm.d/custom.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-RUN sed -i".bak" "11iproxy_buffering off;" /etc/nginx/nginx.conf && \
-	sed -i".bak" "12ifastcgi_buffers 16 256k;" /etc/nginx/nginx.conf && \
-	sed -i".bak" "13ifastcgi_buffer_size 256k;" /etc/nginx/nginx.conf
-
-# set timezone in php.ini
-RUN sed -i".bak" "s/^\;date\.timezone.*$/date\.timezone = \"Europe\/Paris\" /g" /etc/php5/fpm/php.ini
-
-# run init script
-RUN mkdir /var/www
-RUN chown -R www-data:www-data /var/www
-
-RUN rm /etc/nginx/sites-available/default
-RUN ln -s /etc/nginx/sites-available/info.conf /etc/nginx/sites-enabled/
-RUN ln -s /etc/nginx/sites-available/site.conf /etc/nginx/sites-enabled/
-
-# expose port 80
 EXPOSE 80
 
-# run nginx and php5-fpm on startup
-RUN echo "/etc/init.d/php5-fpm start" >> /etc/bash.bashrc
-RUN echo "/etc/init.d/nginx start" >> /etc/bash.bashrc
+CMD ["supervisord"]
