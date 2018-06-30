@@ -58,16 +58,6 @@ RUN set -ex \
 	# Symfony
 	&& wget -q -O /usr/local/bin/symfony https://symfony.com/installer \
 	&& chmod a+x /usr/local/bin/symfony \
-	# Composer
-	&& wget -q -O /usr/src/composer-installer https://getcomposer.org/installer \
-	&& php /usr/src/composer-installer --install-dir /usr/local/bin --filename composer \
-	# Nodejs
-    && curl -sL https://deb.nodesource.com/setup_6.x | bash - \
-    && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
-    && apt-get update && apt-get install --no-install-recommends --no-install-suggests -qy \
-        nodejs \
-        yarn \
     && rm -rf /var/lib/apt/lists/*
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
