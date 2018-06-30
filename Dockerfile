@@ -14,7 +14,7 @@ RUN apt-get update \
 		# gd
 		libfreetype6-dev \
         libjpeg62-turbo-dev \
-		libpng12-dev \
+		libpng-dev \
 	# supervisor
 		supervisor \
 	&& rm -rf /var/lib/apt/lists/* \
