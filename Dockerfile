@@ -20,10 +20,10 @@ RUN apt-get update \
 	&& rm -rf /var/lib/apt/lists/*
 
 # forward request and error logs to docker log collector
-RUN install -m 777 /dev/null /var/log/nginx/access.log \
-	&& install -m 777 /dev/null /var/log/nginx/error.log \
-	&& ln -sf /dev/stdout /var/log/nginx/access.log \
-	&& ln -sf /dev/stderr /var/log/nginx/error.log
+# RUN install -m 777 /dev/null /var/log/nginx/access.log \
+# 	&& install -m 777 /dev/null /var/log/nginx/error.log \
+# 	&& ln -sf /dev/stdout /var/log/nginx/access.log \
+# 	&& ln -sf /dev/stderr /var/log/nginx/error.log
 
 # PHP extensions
 RUN set -ex \
