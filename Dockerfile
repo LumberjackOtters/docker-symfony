@@ -1,8 +1,8 @@
 FROM php:5.6-fpm
 LABEL maintainer="lalung.alexandre@gmail.com"
 
-ENV NGINX_VERSION 1.12.0-1~jessie
-ENV NJS_VERSION   1.12.0.0.1.10-1~jessie
+ENV NGINX_VERSION 1.12.0-1~stretch
+ENV NJS_VERSION   1.12.0.0.1.10-1~stretch
 
 RUN set -ex \
 	&& NGINX_GPGKEY=573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62; \
@@ -17,7 +17,7 @@ RUN set -ex \
 		apt-key adv --keyserver "$server" --keyserver-options timeout=10 --recv-keys "$NGINX_GPGKEY" && found=yes && break; \
 	done; \
 	test -z "$found" && echo >&2 "error: failed to fetch GPG key $NGINX_GPGKEY" && exit 1; \
-	echo "deb http://nginx.org/packages/debian/ jessie nginx" > /etc/apt/sources.list.d/nginx.list \
+	echo "deb http://nginx.org/packages/debian/ stretch nginx" > /etc/apt/sources.list.d/nginx.list \
 	\
 	&& apt-get update \
 	&& apt-get install --no-install-recommends --no-install-suggests -qy \
