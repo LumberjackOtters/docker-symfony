@@ -102,9 +102,11 @@ RUN apt-get update \
 # PHP extensions
 RUN set -ex \
 	&& pecl install apcu \
+	&& pecl install mcrypt \
 	&& docker-php-ext-enable apcu \
+	&& docker-php-ext-enable mcrypt \
 	&& docker-php-ext-configure gd --with-freetype-dir --with-png-dir --with-jpeg-dir \
-	&& docker-php-ext-install -j$(nproc) intl mcrypt
+	&& docker-php-ext-install -j$(nproc) intl
 
 # Frameworks
 RUN set -ex \
