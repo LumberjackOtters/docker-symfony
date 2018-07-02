@@ -113,7 +113,7 @@ RUN apt-get update \
 
 # PHP extensions
 RUN set -ex \
-	&& pecl install apcu-5.1.8 \
+	&& pecl install apcu \
 	&& docker-php-ext-enable apcu \
 	&& docker-php-ext-configure gd --with-freetype-dir --with-png-dir --with-jpeg-dir \
 	&& docker-php-ext-install -j$(nproc) intl mcrypt
