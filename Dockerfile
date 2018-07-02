@@ -1,4 +1,4 @@
-FROM php:5.6-fpm
+FROM php:7-fpm
 LABEL maintainer="lalung.alexandre@gmail.com"
 
 ENV NGINX_VERSION 1.14.0-1~stretch
