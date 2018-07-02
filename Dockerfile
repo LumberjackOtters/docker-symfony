@@ -79,14 +79,7 @@ RUN set -x \
 	\
 	&& apt-get install --no-install-recommends --no-install-suggests -y \
 						$nginxPackages \
-						gettext-base \
-	&& apt-get remove --purge --auto-remove -y apt-transport-https ca-certificates && rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/nginx.list \
-	\
-# if we have leftovers from building, let's purge them (including extra, unnecessary build deps)
-	&& if [ -n "$tempDir" ]; then \
-		apt-get purge -y --auto-remove \
-		&& rm -rf "$tempDir" /etc/apt/sources.list.d/temp.list; \
-	fi
+						gettext-base
 
 RUN apt-get update \
 	&& apt-get install --no-install-recommends --no-install-suggests -qy \
@@ -100,6 +93,7 @@ RUN apt-get update \
 		# gd
 		libfreetype6-dev \
         libjpeg62-turbo-dev \
+		libjpeg-dev \
 		libpng-dev \
 	# supervisor
 		supervisor \
@@ -113,7 +107,7 @@ RUN apt-get update \
 
 # PHP extensions
 RUN set -ex \
-	&& pecl install apcu-beta \
+	&& pecl install apcu-4.0.11 \
 	&& docker-php-ext-enable apcu \
 	&& docker-php-ext-configure gd --with-freetype-dir --with-png-dir --with-jpeg-dir \
 	&& docker-php-ext-install -j$(nproc) intl mcrypt
@@ -129,6 +123,14 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY php.ini /usr/local/etc/php/php.ini
 COPY custom-fpm.conf /usr/local/etc/php-fpm.d/z-custom.conf
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Cleaning
+RUN apt-get remove --purge --auto-remove -y apt-transport-https ca-certificates && rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/nginx.list \
+# if we have leftovers from building, let's purge them (including extra, unnecessary build deps)
+&& if [ -n "$tempDir" ]; then \
+	apt-get purge -y --auto-remove \
+	&& rm -rf "$tempDir" /etc/apt/sources.list.d/temp.list; \
+fi
 
 WORKDIR /var/www/symfony
 
