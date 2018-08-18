@@ -112,7 +112,7 @@ RUN apt-get update \
 RUN set -ex \
 	&& pecl install apcu-4.0.11 \
   && pecl install imagick-3.4.3 \
-	&& docker-php-ext-enable apcu \
+	&& docker-php-ext-enable apcu imagick \
 	&& docker-php-ext-configure gd --with-freetype-dir --with-png-dir --with-jpeg-dir \
 	&& docker-php-ext-install -j$(nproc) intl mcrypt pdo pdo_mysql
 
