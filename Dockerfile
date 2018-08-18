@@ -97,6 +97,9 @@ RUN apt-get update \
 		libpng-dev \
 	# supervisor
 		supervisor \
+  # imagick
+    libmagickwand-dev \
+    libmagickcore-dev \
 	&& rm -rf /var/lib/apt/lists/*
 
 # forward request and error logs to docker log collector
