@@ -7,7 +7,7 @@ ENV NJS_VERSION   1.14.0.0.2.0-1~stretch
 # NGINX
 RUN set -x \
 	&& apt-get update \
-	&& apt-get install --no-install-recommends --no-install-suggests -y gnupg1 apt-transport-https ca-certificates \
+	&& apt-get install --no-install-recommends --no-install-suggests -y gnupg1 apt-transport-https ca-certificates imagemagick \
 	&& \
 	NGINX_GPGKEY=573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62; \
 	found=''; \
@@ -108,6 +108,7 @@ RUN apt-get update \
 # PHP extensions
 RUN set -ex \
 	&& pecl install apcu-4.0.11 \
+  && pecl install imagick-3.4.3 \
 	&& docker-php-ext-enable apcu \
 	&& docker-php-ext-configure gd --with-freetype-dir --with-png-dir --with-jpeg-dir \
 	&& docker-php-ext-install -j$(nproc) intl mcrypt pdo pdo_mysql
